@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>✨ Matnchi AI — Premium UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 50%, #121829, #060814);
+            padding: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Orqa fondagi neon nurlar */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: #4fc3f7;
+            filter: blur(100px);
+            opacity: 0.12;
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::before { top: 10%; left: 10%; background: #0288d1; }
+        body::after { bottom: 10%; right: 10%; background: #00e5ff; }
+
+        .glass-card {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            padding: 55px 24px 30px;
+            background: rgba(15, 22, 42, 0.65);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 
+                        0 0 40px rgba(79, 195, 247, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            color: #f0f3ff;
+            z-index: 1;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(79, 195, 247, 0.25);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 
+                        0 0 60px rgba(79, 195, 247, 0.12);
+        }
+
+        .creator-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00e5ff, #0288d1);
+            color: #060814;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 1.2px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(2, 136, 209, 0.3);
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 10px auto 20px;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top: 2px solid #00e5ff;
+            border-bottom: 2px solid #0288d1;
+            animation: spinRing 4s linear infinite;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1e293b, #0f172a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #00e5ff;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar i {
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.4));
+        }
+
+        .avatar.active i {
+            animation: pulseIcon 0.8s ease infinite alternate;
+            color: #fff;
+            filter: drop-shadow(0 0 15px #00e5ff);
+        }
+
+        .mic-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .mic-btn {
+            position: relative;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 14px 35px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+            max-width: 100%;
+        }
+
+        .mic-btn i {
+            font-size: 1.3rem;
+            color: #00e5ff;
+        }
+
+        .mic-btn:hover {
+            background: linear-gradient(135deg, #27354d, #141e33);
+            border-color: rgba(0, 229, 255, 0.3);
+        }
+
+        .pulse-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50px;
+            background: rgba(0, 229, 255, 0.15);
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mic-btn.listening {
+            background: linear-gradient(135deg, #00e5ff, #0288d1);
+            color: #060814;
+            border-color: transparent;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+        }
+
+        .mic-btn.listening i {
+            color: #060814;
+        }
+
+        .mic-btn.listening + .pulse-wave {
+            animation: pulseWave 1.5s infinite ease-out;
+        }
+
+        .lang-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* Telefonlarda tugmalar sig'sa yonma-yon, sig'masa pastga tushadi */
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-btn.active {
+            background: rgba(0, 229, 255, 0.1);
+            color: #00e5ff;
+            border-color: rgba(0, 229, 255, 0.25);
+        }
+
+        .output-box {
+            background: rgba(5, 8, 20, 0.6);
+            border-radius: 20px;
+            padding: 22px 20px 65px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            min-height: 140px;
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+
+        .output-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            width: 100%;
+            word-break: break-word; /* Telefonlarda uzun so'zlar ekrandan chiqib ketmaydi */
+            overflow-wrap: break-word;
+        }
+
+        .output-text i {
+            color: #00e5ff;
+            margin-right: 8px;
+            opacity: 0.8;
+        }
+
+        .copy-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 6px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: #00e5ff;
+            color: #00e5ff;
+        }
+
+        .copy-btn.copied {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .status-bar span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .status-bar .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            margin-right: 6px;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .status-bar .dot.inactive {
+            background: #64748b;
+            box-shadow: none;
+        }
+
+        .clear-btn {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .clear-btn:hover {
+            color: #ef4444;
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            font-size: 0.65rem;
+            color: #475569;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        /* Animatsiyalar */
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulseIcon {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+
+        @keyframes pulseWave {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0; }
+        }
+
+        /* Ekran o'lchami 480px dan kichik bo'lgan juda kichik telefonlar uchun moslashuv */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .glass-card {
+                padding: 50px 16px 20px;
+                border-radius: 24px;
+            }
+            .avatar-wrap {
+                width: 80px;
+                height: 80px;
+            }
+            .avatar {
+                font-size: 2.2rem;
+            }
+            .mic-btn {
+                padding: 12px 28px;
+                font-size: 0.95rem;
+            }
+            .output-box {
+                padding: 16px 14px 60px;
+                min-height: 130px;
+            }
+            .output-text {
+                font-size: 1rem;
+            }
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+            .footer-note {
+                gap: 10px;
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+
+        <div class="creator-badge">
+            <i class="fas fa-crown"></i> yarativchi zokirov sayfulloh
+        </div>
+
+        <div class="avatar-wrap">
+            <div class="avatar-ring"></div>
+            <div class="avatar" id="avatarIcon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+        </div>
+
+        <div class="mic-container">
+            <button class="mic-btn" id="micBtn">
+                <i class="fas fa-microphone"></i> 
+                <span id="micLabel">Gapiring</span>
+            </button>
+            <div class="pulse-wave"></div>
+        </div>
+
+        <div class="lang-selector">
+            <button class="lang-btn active" data-lang="uz"><i class="fas fa-flag"></i> O‘zbek</button>
+            <button class="lang-btn" data-lang="en"><i class="fas fa-flag"></i> English</button>
+            <button class="lang-btn" data-lang="ru"><i class="fas fa-flag"></i> Русский</button>
+        </div>
+
+        <div class="output-box">
+            <div class="output-text" id="outputText">
+                <i class="fas fa-pen-fancy"></i> 
+                <span id="messageSpan">Mikrofoni bosing va gapiring...</span>
+            </div>
+            <button class="copy-btn" id="copyBtn" title="Ko'chirish">
+                <i class="fas fa-copy"></i> 
+                <span id="copyLabel">Ko'chirish</span>
+            </button>
+        </div>
+
+        <div class="status-bar">
+            <span>
+                <span class="dot inactive" id="statusDot"></span>
+                <span id="statusText">Kutmoqda</span>
+            </span>
+            <button class="clear-btn" id="clearBtn"><i class="fas fa-eraser"></i> Tozalash</button>
+        </div>
+
+        <div class="footer-note">
+            <span><i class="fas fa-globe"></i> 3 til</span>
+            <span><i class="fas fa-microphone"></i> Faqat matn</span>
+            <span><i class="fas fa-copy"></i> Ko'chirish</span>
+            <span><i class="fas fa-shield-alt"></i> shaxsiy</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const micBtn = document.getElementById('micBtn');
+            const micLabel = document.getElementById('micLabel');
+            const messageSpan = document.getElementById('messageSpan');
+            const avatarIcon = document.getElementById('avatarIcon');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const copyLabel = document.getElementById('copyLabel');
+
+            const langBtns = document.querySelectorAll('.lang-btn');
+
+            let currentLang = 'uz';
+            let isListening = false;
+            let recognition = null;
+            let currentText = '';
+
+            const langMap = {
+                uz: { name: "O‘zbek", code: 'uz-UZ' },
+                en: { name: "English", code: 'en-US' },
+                ru: { name: "Русский", code: 'ru-RU' }
+            };
+
+            const messages = {
+                uz: {
+                    listening: "Eshityapman...",
+                    notListening: "Gapiring",
+                    error: "❌ Mikrofon ruxsat kerak",
+                    noSpeech: "🔇 Ovoz aniqlanmadi",
+                    waiting: "Mikrofoni bosing va gapiring...",
+                    copy: "Ko'chirish",
+                    copied: "Ko'chirildi!"
+                },
+                en: {
+                    listening: "Listening...",
+                    notListening: "Speak",
+                    error: "❌ Microphone permission needed",
+                    noSpeech: "🔇 No speech detected",
+                    waiting: "Press mic and speak...",
+                    copy: "Copy",
+                    copied: "Copied!"
+                },
+                ru: {
+                    listening: "Слушаю...",
+                    notListening: "Говорите",
+                    error: "❌ Нужно разрешение микрофона",
+                    noSpeech: "🔇 Речь не распознана",
+                    waiting: "Нажмите микрофон и говорите...",
+                    copy: "Копировать",
+                    copied: "Скопировано!"
+                }
+            };
+
+            function updateStatus(isActive, text) {
+                if (isActive) {
+                    statusDot.className = 'dot';
+                    statusText.textContent = text || 'Eshitmoqda...';
+                } else {
+                    statusDot.className = 'dot inactive';
+                    statusText.textContent = text || 'Kutmoqda';
+                }
+            }
+
+            function updateDisplay(text, isFinal = false) {
+                if (isFinal) {
+                    currentText = text;
+                    messageSpan.innerHTML = text;
+                } else {
+                    messageSpan.innerHTML = `<i class="fas fa-wave-square"></i> ${text}`;
+                }
+
+                if (isListening) {
+                    avatarIcon.classList.add('active');
+                } else {
+                    avatarIcon.classList.remove('active');
+                }
+            }
+
+            function startListening() {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    messageSpan.innerHTML = '❌ Brauzer ovozni qo‘llab-quvvatlamaydi';
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = langMap[currentLang].code || 'uz-UZ';
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.maxAlternatives = 5;
+
+                recognition.onresult = function(event) {
+                    let interim = '';
+                    let final = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            final += transcript;
+                        } else {
+                            interim += transcript;
+                        }
+                    }
+
+                    if (final) {
+                        updateDisplay(final.trim(), true);
+                        stopListening();
+                    } else if (interim) {
+                        updateDisplay(`✍️ ${interim}`, false);
+                    }
+                };
+
+                recognition.onerror = function(event) {
+                    const msg = messages[currentLang];
+                    if (event.error === 'not-allowed') {
+                        messageSpan.innerHTML = msg.error;
+                    } else if (event.error === 'no-speech') {
+                        messageSpan.innerHTML = msg.noSpeech;
+                    } else {
+                        messageSpan.innerHTML = `⚠️ Xato: ${event.error}`;
+                    }
+                    stopListening();
+                };
+
+                recognition.onend = function() {
+                    stopListening();
+                };
+
+                try {
+                    recognition.start();
+                    isListening = true;
+                    micBtn.classList.add('listening');
+                    micLabel.textContent = messages[currentLang].listening;
+                    avatarIcon.classList.add('active');
+                    updateStatus(true, 'Eshitmoqda...');
+                    updateDisplay('Eshityapman...', false);
+                } catch (e) {
+                    console.warn('Recognition start error:', e);
+                    stopListening();
+                }
+            }
+
+            function stopListening() {
+                if (recognition) {
+                    try { recognition.abort(); } catch(e) {}
+                    recognition = null;
+                }
+                isListening = false;
+                micBtn.classList.remove('listening');
+                micLabel.textContent = messages[currentLang].notListening;
+                avatarIcon.classList.remove('active');
+                updateStatus(false, 'Kutmoqda');
+
+                const currentMsg = messageSpan.textContent;
+                if (currentMsg.includes('Eshityapman') || currentMsg.includes('Listening') || 
+                    currentMsg.includes('Слушаю') || currentMsg.includes('✍️')) {
+                    const msg = messages[currentLang];
+                    messageSpan.innerHTML = msg.waiting;
+                }
+            }
+
+            // ===== COPY =====
+            copyBtn.addEventListener('click', function() {
+                const text = messageSpan.textContent;
+                if (!text || text.includes('Mikrofoni') || text.includes('Press') || 
+                    text.includes('Нажмите') || text.includes('Eshityapman') || 
+                    text.includes('Listening') || text.includes('Слушаю')) {
+                    return;
+                }
+
+                navigator.clipboard.writeText(text).then(() => {
+                    const msg = messages[currentLang];
+                    copyLabel.textContent = msg.copied;
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyLabel.textContent = msg.copy;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    const msg = messages[currentLang];
+                    copyLabel.textContent = msg.copied;
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyLabel.textContent = msg.copy;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+
+            micBtn.addEventListener('click', function() {
+                if (isListening) {
+                    stopListening();
+                } else {
+                    startListening();
+                }
+            });
+
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.dataset.lang;
+                    if (lang === currentLang) return;
+
+                    langBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    currentLang = lang;
+                    const msg = messages[lang];
+
+                    if (isListening) stopListening();
+
+                    messageSpan.innerHTML = msg.waiting;
+                    micLabel.textContent = msg.notListening;
+                    copyLabel.textContent = msg.copy;
+                    updateStatus(false, 'Kutmoqda');
+                });
+            });
+
+            clearBtn.addEventListener('click', function() {
+                const msg = messages[currentLang];
+                messageSpan.innerHTML = msg.waiting;
+                currentText = '';
+                if (isListening) stopListening();
+            });
+
+            // Space tugmasi
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && e.target === document.body) {
+                    e.preventDefault();
+                    micBtn.click();
+                }
+            });
+
+            setTimeout(() => {
+                const msg = messages[currentLang];
+                messageSpan.innerHTML = msg.waiting;
+            }, 200);
+
+            console.log('✅ Matnchi AI — Mobil moslashuvchan (Responsive) UI');
+        })();
+    </script>
+</body>
+</html>
